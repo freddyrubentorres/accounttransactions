@@ -1,0 +1,56 @@
+<main class="main-content">
+    <div>
+        <h1>CUENTA</h1>
+        <hr class="line-separator" />
+        <div class="form-row">
+            <div class="form-group">
+                <input id="identification" type="text" [(ngModel)]="identification"
+                    placeholder="Ingrese la identificación" (input)="validateIdentification($event)">
+            </div>
+            <div class="form-row">
+                <div class="buttons">
+                    <button (click)="getClientData()">Buscar</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="errorMessage" class="error-message">
+            <p class="loading-message">{{ errorMessage }}</p>
+        </div>
+        <hr class="line-separator" />
+        <div *ngIf="showForm">
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="accountNumber">Nombre</label>
+                        <input type="text" id="accountNumber" [(ngModel)]="newAccount.name" name="accountNumber"
+                            disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="typeAccount">Cedula</label>
+                        <input type="text" id="typeAccount" [(ngModel)]="newAccount.id" name="typeAccount" disabled />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="accountType">Tipo</label>
+                        <select id="accountType" [(ngModel)]="newAccount.accountType" name="accountType" required>
+                            <option value="AHORRO">AHORRO</option>
+                            <option value="CORRIENTE">CORRIENTE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="initialBalance">Monto</label>
+                        <input type="text" id="initialBalance" [(ngModel)]="newAccount.initialBalance"
+                            name="initialBalance" placeholder="Ingrese monto" (input)="validateAmount($event)" />
+                    </div>
+                </div>
+            </form>
+            <hr class="line-separator" />
+            <div class="form-row">
+                <div class="buttons">
+                    <button (click)="onSubmit()">Añadir movimiento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

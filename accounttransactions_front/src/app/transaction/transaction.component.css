@@ -1,0 +1,113 @@
+.main-content {
+    flex: 1;
+    background-color: #f4f4f4;
+    padding: 20px;
+    margin-left: 20px;
+    border-radius: 8px;
+  }
+  
+  h1 {
+    font-size: 36px;
+    color: #0e255f;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #ffdf00;
+    box-shadow: 0 0 5px rgba(255, 223, 0, 0.5);
+  }
+  
+  input[type="text"]:hover {
+    border-color: #0e255f;
+    box-shadow: 0 0 5px rgba(14, 37, 95, 0.3);
+  }
+  
+  label {
+    font-size: 16px;
+    color: #0e255f;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  button {
+    background-color: #0e255f;
+    color: white;
+    font-size: 16px;
+    padding: 12px 20px;
+    border: 1px solid #0e255f;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+  }
+  
+  button:hover {
+    background-color: #0c1f46;
+    border-color: #0c1f46;
+    box-shadow: 0 0 8px rgba(14, 37, 95, 0.2);
+  }
+  
+  button:focus {
+    outline: none;
+    background-color: #ffdf00;
+    border-color: #ffdf00;
+    box-shadow: 0 0 8px rgba(255, 223, 0, 0.5);
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    border-color: #999;
+    cursor: not-allowed;
+  }
+  
+  .line-separator {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .loading-message {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0e255f;
+    text-align: center;
+    padding: 20px;
+  }
+  
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  margin-bottom: 15px;
+}

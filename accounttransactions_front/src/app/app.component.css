@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  min-height: 50vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}

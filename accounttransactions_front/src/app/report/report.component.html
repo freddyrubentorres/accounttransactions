@@ -1,0 +1,72 @@
+<main class="main-content">
+    <div>
+        <h1>Reporte</h1>
+        <hr class="line-separator" />
+        <div class="form-row">
+            <div class="form-group">
+                <input id="identification" type="text" [(ngModel)]="identification"
+                    placeholder="Ingrese la identificación" (input)="validateIdentification($event)" required>
+            </div>
+            <div class="form-group">
+                <mat-form-field class="custom-date-field">
+                    <input matInput [matDatepicker]="startDatePicker" placeholder="Fecha de inicio"
+                        [(ngModel)]="startDate" #startDateModel="ngModel" required />
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                </mat-form-field>
+                <mat-error *ngIf="startDateModel.invalid && startDateModel.touched">
+                    Verifica fecha inicio
+                </mat-error>
+            </div>
+            <div class="form-group">
+                <mat-form-field class="custom-date-field">
+                    <input matInput [matDatepicker]="endDatePicker" placeholder="Fecha de fin" [(ngModel)]="endDate"
+                        #endDateModel="ngModel" required />
+                    <mat-datepicker #endDatePicker></mat-datepicker>
+                </mat-form-field>
+                <mat-error *ngIf="endDateModel.invalid && endDateModel.touched">
+                    Verifica fecha fin
+                </mat-error>
+            </div>
+        </div>
+    </div>
+    <hr class="line-separator" />
+    <div class="form-row">
+        <div class="buttons">
+            <button (click)="getClientData()">Buscar</button>
+        </div>
+    </div>
+    <hr class="line-separator" />
+    <div *ngIf="errorMessage" class="error-message">
+        <p class="loading-message">{{ errorMessage }}</p>
+    </div>
+    <div class="buttons" *ngIf="data.length > 0">
+        <button (click)="exportToPDF()">Descargar en PDF</button>
+    </div>
+    <div class="form-row">
+        <table mat-table [dataSource]="data" class="custom-table">
+            <ng-container matColumnDef="accountId">
+                <th mat-header-cell *matHeaderCellDef class="account-id-header"> Número de Cuenta </th>
+                <td mat-cell *matCellDef="let row" class="account-id-cell">
+                    <div class="account-id-container">
+                        <div class="account-id">{{ row.accountId }}</div>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="movement">
+                <th mat-header-cell *matHeaderCellDef> Movimientos </th>
+                <td mat-cell *matCellDef="let row">
+                    <div *ngFor="let item of row.movements" class="movement-item">
+                        <div>Fecha: {{ item.date | date:'yyyy-MM-dd' }}</div>
+                        <div>Tipo: {{ item.transactionType }}</div>
+                        <div>Descripción: {{ item.description }}</div>
+                        <div>Monto: {{ item.amount }}</div>
+                        <div>Saldo: {{ item.balance }}</div>
+                        <hr class="line-separator" />
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</main>
