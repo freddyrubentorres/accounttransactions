@@ -1,9 +1,10 @@
 package com.ms.accounttransactions_back.mapper.impl;
 
-import com.ms.accounttransactions_back.dto.ClientDto;
-import com.ms.accounttransactions_back.model.entity.Client;
-import com.ms.accounttransactions_back.model.enums.Gender;
-import com.ms.accounttransactions_back.model.enums.Status;
+
+import com.ms.accounttransactions_back.adapter.out.persistence.mapper.impl.ClientMapperImpl;
+import com.ms.accounttransactions_back.domain.Client;
+import com.ms.accounttransactions_back.domain.enums.Gender;
+import com.ms.accounttransactions_back.domain.enums.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,14 +50,14 @@ class ClientMapperImplTest {
     @Test
     void toDto_NotNull() {
         // Given
-        var client = mock(Client.class);
+        com.ms.accounttransactions_back.adapter.out.persistence.entity.Client client = mock(com.ms.accounttransactions_back.adapter.out.persistence.entity.Client.class);
         when(client.getClientId()).thenReturn(1L);
         when(client.getEmail()).thenReturn("test@example.com");
         when(client.getPassword()).thenReturn("password123");
         when(client.getStatus()).thenReturn(Status.TRUE);
         when(client.getPersonId()).thenReturn(12345L);
         when(client.getName()).thenReturn("John");
-        when(client.getLast_name()).thenReturn("Doe");
+        when(client.getLastName()).thenReturn("Doe");
         when(client.getGender()).thenReturn(Gender.M);
         when(client.getAge()).thenReturn(30L);
         when(client.getIdentification()).thenReturn("ID12345");
@@ -72,7 +73,7 @@ class ClientMapperImplTest {
         assertEquals(Status.TRUE, clientDto.getStatus());
         assertEquals(12345L, clientDto.getPersonId());
         assertEquals("John", clientDto.getName());
-        assertEquals("Doe", clientDto.getLast_name());
+        assertEquals("Doe", clientDto.getLastName());
         assertEquals(Gender.M, clientDto.getGender());
         assertEquals(30, clientDto.getAge());
         assertEquals("ID12345", clientDto.getIdentification());
@@ -91,14 +92,14 @@ class ClientMapperImplTest {
     @Test
     void toEntityNoNull() {
         // Given
-        var clientDto = new ClientDto();
+        var clientDto = new Client();
         clientDto.setClientId(1L);
         clientDto.setEmail("test@example.com");
         clientDto.setPassword("password123");
         clientDto.setStatus(Status.TRUE);
         clientDto.setPersonId(10L);
         clientDto.setName("JOHN");
-        clientDto.setLast_name("DOE");
+        clientDto.setLastName("DOE");
         clientDto.setGender(Gender.M);
         clientDto.setAge(30L);
         clientDto.setIdentification("ID12345");
@@ -113,7 +114,7 @@ class ClientMapperImplTest {
         assertEquals(clientDto.getPassword(), client.getPassword());
         assertEquals(clientDto.getStatus(), client.getStatus());
         assertEquals(clientDto.getName(), client.getName());
-        assertEquals(clientDto.getLast_name(), client.getLast_name());
+        assertEquals(clientDto.getLastName(), client.getLastName());
         assertEquals(clientDto.getGender(), client.getGender());
         assertEquals(clientDto.getAge(), client.getAge());
         assertEquals(clientDto.getIdentification(), client.getIdentification());

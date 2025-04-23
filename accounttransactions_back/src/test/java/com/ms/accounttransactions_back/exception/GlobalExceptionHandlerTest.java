@@ -1,6 +1,9 @@
 package com.ms.accounttransactions_back.exception;
 
-import com.ms.accounttransactions_back.dto.response.ErrorResponse;
+import com.ms.accounttransactions_back.adapter.in.web.dto.ErrorResponse;
+import com.ms.accounttransactions_back.adapter.in.web.exception.ErrorsMessage;
+import com.ms.accounttransactions_back.adapter.in.web.exception.GlobalExceptionHandler;
+import com.ms.accounttransactions_back.adapter.in.web.exception.NotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +36,7 @@ class GlobalExceptionHandlerTest {
     private WebRequest webRequest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
     }
     @AfterEach
@@ -43,7 +46,7 @@ class GlobalExceptionHandlerTest {
 
 
     @Test
-    public void methodArgumentNotValidException() {
+    void methodArgumentNotValidException() {
         // Given
         var exception = mock(MethodArgumentNotValidException.class);
         when(exception.getAllErrors()).thenReturn(Collections.singletonList(new org.springframework.validation.ObjectError("field", "Invalid field")));
@@ -56,7 +59,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    public void testHandleClientNotFoundException() {
+    void testHandleClientNotFoundException() {
         // Given
         var message = "Client not found";
         var exception = new NotFoundException(message);
@@ -70,7 +73,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    public void testHandleSQLIntegrityConstraintViolationException() {
+    void testHandleSQLIntegrityConstraintViolationException() {
         // Given
         var message = "Duplicate entry for key 'email'";
         var exception = new SQLIntegrityConstraintViolationException(message);

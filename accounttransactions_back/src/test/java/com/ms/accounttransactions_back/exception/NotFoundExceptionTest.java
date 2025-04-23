@@ -1,5 +1,6 @@
 package com.ms.accounttransactions_back.exception;
 
+import com.ms.accounttransactions_back.adapter.in.web.exception.NotFoundException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NotFoundExceptionTest {
     @Test
-    public void testNotFoundExceptionConstructor() {
+    void testNotFoundExceptionConstructor() {
         // Given
         var expectedMessage = "Client not found";
         // When
@@ -22,7 +23,7 @@ class NotFoundExceptionTest {
     }
 
     @Test
-    public void testNotFoundExceptionMessage() {
+    void testNotFoundExceptionMessage() {
         // Given
         var message = "Entity not found";
         // When
