@@ -35,6 +35,4 @@ El frontend está construido con **Angular**. Proporciona una interfaz de usuari
 
 - **Angular 15**
 - **TypeScript**
-- **Angular Material** para una interfaz atractiva y fácil de usar.
-- **Reactive Forms** y **Two-Way Data Binding** para manejar formularios.
 
