@@ -1,59 +1,102 @@
-# AccounttransactionsFront
+# **Account Transactions - Frontend**
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.5.
+## **Descripción**
+Este es el frontend para la gestión de transacciones bancarias, desarrollado con **Angular**. La aplicación permite a los usuarios realizar y visualizar transacciones, gestionar cuentas y clientes, y generar reportes.
 
-## Development server
+---
 
-To start a local development server, run:
+## **Características**
 
-```bash
-ng serve
-```
+### **Componentes Principales**
+- **HeaderComponent**: Barra de navegación superior.
+- **SidebarComponent**: Menú lateral de navegación para acceder a diferentes secciones.
+- **MainComponent**: Componente principal que muestra el contenido central.
+- **FooterComponent**: Pie de página con información adicional.
+- **ClientComponent**: Sección para visualizar y gestionar los clientes.
+- **AccountComponent**: Permite gestionar y consultar información de cuentas.
+- **TransactionComponent**: Permite realizar y visualizar transacciones.
+- **ReportComponent**: Generación de reportes de transacciones.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### **Funcionalidades Principales**
+- **Gestión de transacciones**: Los usuarios pueden consultar una cuenta y agregar transacciones, asegurando que todos los campos sean validados correctamente antes de enviar.
+- **Validaciones**: Se incluyen validaciones en los formularios, como la validación de número de cuenta y montos de transacciones.
+- **Comunicaciones HTTP**: Se comunica con el backend utilizando **HTTPClient** de Angular, realizando solicitudes GET y POST para manejar la información de cuentas, clientes y transacciones.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## **Configuración del Entorno**
 
-```bash
-ng generate component component-name
-```
+El archivo de configuración `environment.ts` se encuentra en el directorio `src/environments/` y contiene las URLs base para las solicitudes HTTP realizadas desde el frontend.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### **Variables de Entorno**
 
-```bash
-ng generate --help
-```
+Las variables definidas en `environment.ts` son:
 
-## Building
+- **`production`**: Booleano que indica si el entorno está en modo producción. En este archivo de configuración, el valor es `false`, ya que está configurado para desarrollo local.
+  
+- **`baseUrlgetClients`**: URL base para obtener la información de los clientes. Ejemplo: `http://localhost:8080/accounttransactions_back/api/clients/identification/`.
+  
+- **`baseUrlpostClients`**: URL base para crear nuevos clientes. Ejemplo: `http://localhost:8080/accounttransactions_back/api/clients`.
+  
+- **`baseUrlgetReports`**: URL base para obtener reportes de transacciones. Ejemplo: `http://localhost:8080/accounttransactions_back/api/reports`.
+  
+- **`baseUrlgetAccount`**: URL base para obtener información sobre cuentas por su número. Ejemplo: `http://localhost:8080/accounttransactions_back/api/accounts/accountNumber/`.
+  
+- **`baseUrlpostTransaction`**: URL base para realizar una transacción. Ejemplo: `http://localhost:8080/accounttransactions_back/api/transactions`.
+  
+- **`baseUrlpostAccount`**: URL base para crear una nueva cuenta. Ejemplo: `http://localhost:8080/accounttransactions_back/api/accounts`.
 
-To build the project run:
+### **Uso de las Variables de Entorno**
 
-```bash
-ng build
-```
+Estas variables de entorno se importan directamente en los servicios de la aplicación Angular. Por ejemplo, en el servicio `TransactionService`, se utilizan las siguientes URLs:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- **`getAccountNumber`** utiliza `baseUrlgetAccount` para realizar una solicitud GET para obtener los datos de una cuenta.
+- **`createTransaction`** utiliza `baseUrlpostTransaction` para enviar los datos de una transacción al backend.
 
-## Running unit tests
+Estas URLs se encuentran configuradas en el archivo `environment.ts` para facilitar el desarrollo y la modificación de la URL del backend en un solo lugar.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## **Estilos CSS**
 
-## Running end-to-end tests
+En este proyecto, todos los estilos fueron creados desde cero, sin el uso de templates o frameworks preexistentes. El diseño y los estilos fueron desarrollados de manera personalizada para garantizar que la interfaz de usuario sea única, responsive y acorde con las necesidades específicas del sistema de gestión de cuentas y transacciones.
 
-For end-to-end (e2e) testing, run:
+### **Características del CSS Personalizado**
 
-```bash
-ng e2e
-```
+- **Uso de Clases y Selectores**: Se hicieron clases y selectores personalizados para mantener un control total sobre el diseño y facilitar la futura escalabilidad del proyecto.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- **Sin Dependencias de Frameworks CSS**: No se utilizó ningún framework como Bootstrap o Materialize, lo que permitió una mayor personalización y control sobre los detalles visuales y la estructura de la aplicación.
 
-## Additional Resources
+### **Estructura del CSS**
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+El archivo de estilos fue estructurado en módulos y componentes, de modo que cada parte del proyecto tiene su propio archivo de estilo, lo que mejora la mantenibilidad y modularidad del código.
+
+---
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/1.png?raw=true)
+
+
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/2.png?raw=true)
+
+
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/3.png?raw=true)
+
+
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/4.png?raw=true)
+
+
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/5.png?raw=true)
+
+
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/6.png?raw=true)
+
+
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/7.png?raw=true)
+
+---
