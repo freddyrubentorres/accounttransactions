@@ -1,32 +1,23 @@
-# Usa una imagen base de OpenJDK para ejecutar la aplicación
-FROM openjdk:17-jdk-slim as build
-
-# Establece el directorio de trabajo dentro del contenedor
+# Usamos una imagen base de OpenJDK 17
+FROM openjdk:17-slim AS build
+# Instalar Maven
+RUN apt-get update && apt-get install -y maven
+# Establecer el directorio de trabajo en el contenedor
 WORKDIR /app
-
-# Copia el archivo `pom.xml` y las dependencias para construir la aplicación
-COPY pom.xml .
-
-# Descarga las dependencias de Maven (esto solo ocurre cuando el `pom.xml` cambia)
+# Copiar el archivo pom.xml y descargar las dependencias
+COPY pom.xml /app
 RUN mvn dependency:go-offline
-
-# Copia el código fuente de la aplicación al contenedor
+# Copiar el código fuente de la aplicación
 COPY src /app/src
-
-# Construye la aplicación usando Maven
+# Construir la aplicación y generar el archivo JAR
 RUN mvn clean package -DskipTests
-
-# Usa una imagen más ligera de OpenJDK para ejecutar la aplicación
-FROM openjdk:17-jdk-slim
-
-# Establece el directorio de trabajo dentro del contenedor
+# Imagen para ejecutar la aplicación
+FROM openjdk:17-slim
+# Establecer el directorio de trabajo en el contenedor
 WORKDIR /app
-
-# Copia el archivo JAR generado en el contenedor desde la etapa anterior
-COPY --from=build /app/target/accounttransactions_back-0.0.1-SNAPSHOT.jar /app/app.jar
-
-# Expone el puerto 8080 para que la aplicación sea accesible fuera del contenedor
+# Copiar el archivo JAR desde el contenedor de construcción
+COPY --from=build /app/target/accounttransactions_back-0.0.1-SNAPSHOT.jar /app/accounttransactions_back.jar
+# Exponer el puerto que usará la aplicación (por defecto en Spring Boot es 8080)
 EXPOSE 8080
-
-# Comando para ejecutar la aplicación al iniciar el contenedor
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "/app/accounttransactions_back.jar"]

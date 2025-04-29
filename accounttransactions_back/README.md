@@ -2,34 +2,56 @@
 
 Este es un proyecto backend para gestionar transacciones de cuentas bancarias. Proporciona una API RESTful que permite crear cuentas, realizar transacciones y consultar información de las cuentas de los clientes.
 
-## Estructura del Proyecto
+## Arquitectura Hexagonal
 
-La estructura del proyecto sigue una arquitectura limpia y modular, basada en los principios de SOLID. A continuación se muestra un esquema detallado de la estructura de directorios:
+El sistema está implementado utilizando **Arquitectura Hexagonal** (también conocida como **Arquitectura de Puertos y Adaptadores**). Este enfoque permite desacoplar la lógica de negocio del resto del sistema, como la base de datos, servicios externos y la interfaz de usuario. Los principales beneficios de este patrón son:
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/arquitecturaHexagonal.png?raw=true)
+
+
+- **Desacoplamiento**: La lógica de negocio se encuentra aislada de las tecnologías específicas, como la base de datos o los frameworks, lo que facilita el mantenimiento y la evolución del sistema.
+- **Escalabilidad**: Se pueden agregar nuevas funcionalidades o adaptadores sin modificar el núcleo del sistema, manteniendo la aplicación flexible y extensible.
+- **Pruebas**: Gracias a la separación de responsabilidades, las pruebas unitarias y de integración son más fáciles de implementar y ejecutar.
+
+### Capas del Proyecto:
+
+- **Dominio**: Contiene las entidades de negocio y las reglas de negocio.
+- **Aplicación**: Define la lógica del servicio y los casos de uso.
+- **Adaptadores**:
+    - **Entrada (Web)**: Controladores HTTP que interactúan con los usuarios finales.
+    - **Salida (Persistence)**: Adaptadores que interactúan con bases de datos u otros sistemas externos.
 
 ## Estructura de Directorios
+
+La estructura del proyecto sigue el patrón de la arquitectura hexagonal y está organizada de la siguiente manera:
 
 ```plaintext
 com.ms.accounttransactions_back
 ├── adapter
-│   ├── config           # Configuraciòn necesarias para el funcionamiento.
-│   ├── in.web
-│   │   ├── constants    # Constantes
-│   │   ├── controller   # Controladores que gestionan las solicitudes HTTP entrantes y las redirigen a los servicios adecuados.
-│   │   ├── dto          # Objetos de transferencia de datos (DTO) para facilitar el intercambio de información entre capas.
-│   │   └── exception    # Clases relacionadas con el manejo de excepciones y errores en la capa de entrada.
-│   ├── out.persistence
-│   │   ├── entity       # Clases de entidad que representan los objetos persistidos en la base de datos.
-│   │   ├── repository   # Repositorios para interactuar con la base de datos y realizar operaciones CRUD.
-│   │   └── mapper       # Clases de mapeo para convertir entre entidades y DTOs.
-│   └── out.messages     # Comunicación con sistemas externos mediante mensajería (por ejemplo, Kafka, RabbitMQ, etc.).
+│   ├── in
+│   │   └── web
+│   │       ├── controller     # Controladores REST que exponen la API al exterior.
+│   │       ├── dto            # Objetos de transferencia de datos (DTOs) usados en la capa web.
+│   │       ├── exception      # Manejo de errores específicos de las peticiones web.
+│   │       └── util           # Funciones auxiliares para la capa de entrada.
+│   └── out
+│       └── persistence
+│           ├── entity        # Entidades JPA mapeadas para la base de datos.
+│           ├── mapper        # Mappers para transformar entidades en modelos de dominio.
+│           ├── repository    # Repositorios que extienden interfaces de Spring Data.
+│           └──               # Implementación de lógica de persistencia adicional.
 ├── application
-│   ├── port.in          # Interfaz que define las operaciones que la capa de entrada (controllers) puede invocar.
-│   ├── port.out         # Interfaz que define las operaciones que la capa de salida (repositories, servicios externos) ofrece.
-│   └── service          # Implementación de la lógica de negocio central del sistema.
+│   ├── exception             # Excepciones propias de la lógica de negocio.
+│   ├── port
+│   │   ├── in                # Interfaces que definen los casos de uso del sistema.
+│   │   └── out               # Interfaces para dependencias externas necesarias (persistencia, etc.).
+│   └── service               # Implementaciones concretas de los casos de uso.
 ├── common
-│   └── component        # Componentes y utilidades comunes que se utilizan en varias partes de la aplicación (por ejemplo, configuraciones, validaciones, etc.).
-└── domain
-    └── TipoNota.java    # Clase de dominio que representa un objeto de negocio o entidad central en el sistema.
+│   └── component             # Componentes reutilizables como servicios utilitarios, helpers, etc.
+├── domain
+│   ├── enums                 # Enumeraciones que representan conceptos del dominio (tipos, estados, etc.).
+│   ├── validator             # Validaciones propias del negocio.
+│   └──                       # Entidades centrales del dominio y su lógica principal.
 
 ```
 
@@ -37,281 +59,354 @@ com.ms.accounttransactions_back
 
 ## SOLID en el Proyecto
 
-Este proyecto sigue los principios SOLID para asegurar que el código sea fácil de mantener, escalable y testeable. A continuación, se detalla cómo se implementan estos principios en el código:
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/SOLID.png?raw=true)
+
 
 ## 1. **Single Responsibility Principle (SRP)** - Principio de Responsabilidad Única
-
-Cada clase y componente del proyecto tiene una única responsabilidad, lo que facilita su comprensión, mantenimiento y pruebas. Ejemplos:
-
-- **Controladores** (`AccountController`): Gestionan las solicitudes HTTP y delegan la lógica de negocio a los servicios.
-- **Servicios** (`AccountServiceImpl`): Contienen la lógica de negocio relacionada con las cuentas y las transacciones.
-- **Repositorios** (`AccountRepository`): Realizan la interacción con la base de datos.
-- **DTOs y Entidades** (`Account`, `AccountDto`): Contienen los datos y validaciones necesarias para la transferencia de información.
-- **Mapper** (`AccountMapperImpl`): Realiza la conversión entre las entidades y los DTOs.
+- Las clases tienen responsabilidades bien definidas, como `AccountPersistenceAdapter` (persistencia) y `AccountMapper` (mapeo).
+- Las interfaces en **`port/in`** y **`port/out`** también siguen este principio, separando claramente los casos de uso y servicios.
 
 ## 2. **Open/Closed Principle (OCP)** - Principio de Abierto/Cerrado
-
-El código está diseñado de forma que se puede **extender** sin necesidad de **modificar** las clases existentes:
-
-- Puedes agregar nuevas funcionalidades (por ejemplo, nuevos tipos de transacciones) creando nuevas clases o métodos sin modificar el código base.
-- Los servicios y mappers están diseñados para ser fácilmente extendibles sin que se vea afectada la funcionalidad existente.
-
-Ejemplo:
-- La clase `AccountServiceImpl` es extensible y permite agregar nuevos comportamientos como la creación de transacciones adicionales sin modificar la implementación existente.
+- El sistema es fácilmente extensible mediante nuevas implementaciones de interfaces, sin modificar las clases existentes.
+- La arquitectura hexagonal permite agregar adaptadores o servicios sin alterar el comportamiento de las clases base.
 
 ## 3. **Liskov Substitution Principle (LSP)** - Principio de Sustitución de Liskov
-
-Las clases que implementan interfaces o extienden otras clases pueden ser sustituidas sin afectar la funcionalidad del sistema. Ejemplos:
-
-- **`AccountMapperImpl`** implementa la interfaz `AccountMapper`, y puede ser reemplazada por otras implementaciones sin afectar el funcionamiento del sistema.
-- **`MessageService`** es una interfaz que permite diferentes implementaciones, como `PropertiesMessageService`, las cuales pueden ser intercambiadas sin problemas.
+- No hay jerarquías complejas de herencia, pero las interfaces definidas permiten sustituir implementaciones sin alterar el comportamiento del sistema.
 
 ## 4. **Interface Segregation Principle (ISP)** - Principio de Segregación de Interfaces
-
-Las interfaces están diseñadas de manera que contienen solo los métodos necesarios para las clases que las implementan. Esto asegura que las clases no estén obligadas a implementar métodos que no usen. Ejemplos:
-
-- **`MessageService`** tiene un solo método `get` que es el necesario para recuperar mensajes, manteniendo la interfaz simple y enfocada.
-- Otros servicios o interfaces siguen el mismo principio, asegurando que las implementaciones sean específicas y no tengan métodos innecesarios.
+- Las interfaces en **`application/port`** son específicas para cada caso de uso, evitando que las clases implementen métodos innecesarios.
+- Esto permite una implementación más limpia y centrada en las necesidades del sistema.
 
 ## 5. **Dependency Inversion Principle (DIP)** - Principio de Inversión de Dependencias
-
-El código depende de **abstracciones** (interfaces), no de implementaciones concretas. Esto permite un desacoplamiento entre las clases de alto nivel y las de bajo nivel, y facilita la inyección de dependencias y el testeo. Ejemplos:
-
-- La clase **`AccountServiceImpl`** depende de interfaces como `AccountRepository` y `TransactionRepository`, y no de las implementaciones concretas de estas clases.
-- Las depend
+- Las clases de alto nivel, como **`AccountService`**, dependen de interfaces (como `LoadAccountPort`), no de clases concretas.
+- Esto desacopla las capas del sistema y facilita la prueba y el mantenimiento.
 
 ---
 
-## Características del Proyecto
+## 🧾 Información General
+- **Spring Boot Version:** `3.3.11`
+- **Java Version:** `17`
+---
 
-## Arquitectura Limpia
+## Dependencias Principales
 
-El código sigue una arquitectura típica basada en la separación de responsabilidades, utilizando patrones como el de **DTO (Data Transfer Object)**, **Mapper**, y **Service Layer**, lo cual mejora la mantenibilidad y la escalabilidad.
-
-- **DTO (Data Transfer Object)**: Los DTOs se usan para transferir datos entre capas, especialmente para la entrada y salida de información en las solicitudes HTTP.
-- **Mapper**: Se utiliza para transformar los objetos de dominio a DTOs y viceversa, lo que simplifica el proceso de conversión entre diferentes representaciones de los datos.
-- **Service Layer**: Los servicios contienen la lógica de negocio y se encargan de interactuar con los repositorios para persistir los datos. Esta capa también maneja las operaciones críticas como la creación de cuentas y las transacciones.
-
-La implementación de interfaces como **MessageService** y la inyección de dependencias con `@RequiredArgsConstructor` ayuda a mantener el código desacoplado, lo cual es ideal para pruebas y cambios futuros.
+| Dependencia                          | Propósito                                    |
+|--------------------------------------|----------------------------------------------|
+| `spring-boot-starter-data-jpa`       | Persistencia con JPA/Hibernate               |
+| `spring-boot-starter-web`            | Creación de APIs REST                        |
+| `spring-boot-starter-validation`     | Validación de datos con anotaciones          |
+| `mysql-connector-j` (scope: runtime) | Conector JDBC para base de datos MySQL       |
+| `lombok` (opcional)                  | Reducción de código boilerplate con anotaciones |
+| `spring-boot-starter-test` (test)    | Herramientas para pruebas (JUnit, Mockito)   |
 
 ---
 
-## Uso de Lombok
+## Plugins de Build
 
-El uso de **Lombok** (@Data, @Getter, @Setter, etc.) hace el código más conciso y legible, eliminando la necesidad de escribir getters y setters manualmente. Esto mejora la claridad del código y reduce la repetición, lo que facilita su mantenimiento.
-
----
-
-## Manejo de Errores
-
-El manejo de errores se realiza utilizando **excepciones personalizadas** como `NotFoundException`, lo cual permite capturar y manejar errores específicos de la lógica del dominio. Además, se gestiona los errores de forma detallada a través de la clase **ErrorsMessage**, lo que mejora la robustez y claridad de la aplicación.
+| Plugin                     | Función |
+|----------------------------|--------|
+| `maven-compiler-plugin`    | Compilación de código y soporte para procesadores de anotaciones (Lombok). |
+| `spring-boot-maven-plugin`| Soporte para empaquetado y ejecución de aplicaciones Spring Boot. |
+| `jacoco-maven-plugin`     | Generación de reportes de cobertura de pruebas unitarias. Excluye archivos específicos. |
 
 ---
 
-## Transacciones
+## Buenas Prácticas Aplicadas
 
-El uso de la anotación `@Transactional` en los servicios asegura que las operaciones de base de datos sean consistentes y que los cambios se gestionen de manera adecuada. Esto es particularmente importante en operaciones críticas como:
-
-- La creación de cuentas.
-- La realización de transacciones entre cuentas.
-  
-Esto garantiza que las modificaciones en la base de datos sean atómicas, y que cualquier error o interrupción en el proceso no deje el sistema en un estado inconsistente.
+- Uso de `Lombok` para código limpio.
+- Separación clara de dependencias por entorno (`runtime`, `test`, `optional`).
+- Integración con `JaCoCo` para medir cobertura de pruebas.
+- Preparado para análisis estático con herramientas como SonarQube.
 
 ---
 
-## Validación
+# AccountTransactions Back API Configuration
 
-La validación de datos con anotaciones como `@NotNull`, `@DecimalMin`, y `@DecimalMax` en los DTOs ayuda a garantizar que los datos recibidos sean válidos antes de procesarlos. Esto protege el sistema contra datos corruptos o mal formateados, y asegura que las reglas del negocio se cumplan correctamente.
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/2.png?raw=true)
+
+## Configuración del Entorno
+
+El entorno de esta API está configurado con las siguientes variables clave:
+
+- **Scheme**: `http`
+    - El esquema utilizado para las solicitudes es HTTP.
+
+- **Host**: `localhost`
+    - La API se ejecuta localmente en el host `localhost`.
+
+- **Port**: `8080`
+    - El puerto de la aplicación es el `8080`.
+
+- **Base Path**: `/accounttransactions_back/api`
+    - La base para todas las rutas de la API es `/accounttransactions_back/api`.
+
+## Rutas de la API
+
+A continuación, se detallan las rutas principales de la API:
+
+1. **Clientes**
+    - **Ruta**: `/clients`
+    - Maneja las operaciones relacionadas con los clientes.
+
+2. **Cuentas**
+    - **Ruta**: `/accounts`
+    - Administra las operaciones de cuentas bancarias.
+
+3. **Transacciones**
+    - **Ruta**: `/transactions`
+    - Permite realizar operaciones de transacciones entre cuentas.
+
+4. **Reportes**
+    - **Ruta**: `/reports`
+    - Genera y devuelve los reportes relacionados con las transacciones y balances.
+
+## Rutas de Búsqueda
+
+- **Por Identificación del Cliente**
+    - **Ruta**: `/identification/{identification}`
+    - Permite consultar la información de un cliente usando su número de identificación.
+
+- **Por Número de Cuenta**
+    - **Ruta**: `/accountNumber/{accountNumber}`
+    - Permite consultar la información de una cuenta bancaria usando el número de cuenta.
+
+## Ejemplo de Configuración
+
+A continuación se presenta un ejemplo de las variables del entorno en formato JSON:
+
+```json
+{
+  "scheme": "http",
+  "host": "localhost",
+  "port": "8080",
+  "back": "/accounttransactions_back/api",
+  "clients": "/clients",
+  "accounts": "/accounts",
+  "transactions": "/transactions",
+  "reports": "/reports",
+  "byIdentificacion": "/identification/",
+  "byAccountNumber": "/accountNumber/"
+}
+
+```
+# AccountTransactions API - Postman Collection
+
+## Rutas de la API
+
+### 1. **Clientes**
+
+#### 1.1 Crear un Cliente
+- **Método**: `POST`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{clients}}`
+- **Cuerpo (JSON)**:
+    ```json
+    {
+      "email": "joselema@gmail.com",
+      "age": "32",
+      "password": "Ag@68hese10",
+      "name": "jose",
+      "lastName": "lema",
+      "gender": "M",
+      "identification": "1717493571",
+      "address": "Otavalo sn y principal",
+      "phone": "0982547851"
+    }
+    ```
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/1.png?raw=true)
+
+#### 1.2 Obtener Cliente por Identificación
+- **Método**: `GET`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{clients}}{{byIdentificacion}}1717493571`
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/3.png?raw=true)
+
+#### 1.3 Actualizar Cliente
+- **Método**: `PATCH`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{clients}}{{byIdentificacion}}1717493571`
+- **Cuerpo (JSON)**:
+    ```json
+    {
+      "email": "joselematest@hotmail.com"
+    }
+    ```
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/4.png?raw=true)
+
+### 2. **Cuentas**
+
+#### 2.1 Crear una Cuenta
+- **Método**: `POST`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{accounts}}`
+- **Cuerpo (JSON)**:
+    ```json
+    {
+      "accountType": "AHORRO",
+      "initialBalance": "2000.00",
+      "client": {
+        "identification": 1717493571
+      }
+    }
+    ```
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/5.png?raw=true)
+
+#### 2.2 Obtener Cuenta por Número de Cuenta
+- **Método**: `GET`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{accounts}}{{byIdentificacion}}1717493571`
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/6.png?raw=true)
+
+#### 2.3 Actualizar Estado de la Cuenta
+- **Método**: `PATCH`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{accounts}}{{byAccountNumber}}593602`
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/7.png?raw=true)
+
+### 3. **Transacciones**
+
+#### 3.1 Crear una Transacción
+- **Método**: `POST`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{transactions}}`
+- **Cuerpo (JSON)**:
+    ```json
+    {
+      "description": "SUELDO 04 2025",
+      "amount": 2500,
+      "account": {
+        "accountNumber": 593602
+      }
+    }
+    ```
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/8.png?raw=true)
+
+
+### 4. **Reportes**
+
+#### 4.1 Obtener Reporte por Identificación y Fechas
+- **Método**: `GET`
+- **URL**: `{{scheme}}://{{host}}:{{port}}{{back}}{{reports}}?identification=1717493571&startDate=2025-04-06&endDate=2025-04-28`
+- **Parámetros de Consulta**:
+    - `identification`: 1717493571
+    - `startDate`: 2025-04-06
+    - `endDate`: 2025-04-28
 
 ---
 
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/9.png?raw=true)
 
 
-## Dependencias y Plugins
+### 5. **Validaciones**
 
-Este proyecto está basado en Maven, y las principales dependencias y plugins utilizados son:
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/11.png?raw=true)
 
-### Dependencias Principales:
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/12.png?raw=true)
 
-- **Spring Boot Starter Data JPA**  
-   - Integración con JPA para la persistencia de datos.
-- **Spring Boot Starter Web**  
-   - Framework para crear aplicaciones web RESTful.
-- **MySQL Connector/J**  
-   - Conexión con bases de datos MySQL.
-- **Lombok**  
-   - Reducción de código repetitivo (Getters, Setters, etc.).
-- **Spring Boot Starter Test**  
-   - Herramientas para realizar pruebas.
-- **Validation API**  
-   - API para validación de datos.
-- **MapStruct**  
-   - Herramienta para mapeo de DTOs y entidades.
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/13.png?raw=true)
 
-   ### Plugins Utilizados:
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/postman/14.png?raw=true)
 
-- **Maven Compiler Plugin**  
-   - Configuración para usar Lombok y procesadores de anotaciones.
-- **Spring Boot Maven Plugin**  
-   - Empaquetado de la aplicación como un JAR ejecutable.
-- **Jacoco Maven Plugin**  
-   - Herramienta de cobertura de pruebas y generación de informes.
+# Base de Datos: `accounttransactions_db`
 
-   ## Tecnologías Utilizadas
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/bd/15.png?raw=true)
 
-- **Java 17**: Lenguaje de programación utilizado para el desarrollo del proyecto.
-- **Spring Boot**: Framework para crear aplicaciones empresariales y servicios web RESTful.
-- **MySQL**: Sistema de gestión de bases de datos utilizado para almacenar la información.
-- **MapStruct**: Biblioteca para simplificar el mapeo entre objetos.
+## Estructura de Tablas
 
+### 1. `person`
+Contiene información personal del cliente.
+- Campos: `person_id`, `address`, `age`, `gender`, `identification`, `last_name`, `name`, `phone`, `status`
+- Clave primaria: `person_id`
+- Clave única: `identification`
 
----
+### 2. `client`
+Representa al cliente como usuario del sistema, ligado a una persona.
+- Campos: `email`, `password`, `person_id`
+- Clave primaria: `person_id`
+- Clave única: `email`
+- Relación: FK a `person.person_id`
 
-# accounttransactions_back - API Collection
+### 3. `account`
+Información de las cuentas bancarias.
+- Campos: `account_id`, `account_number`, `account_type`, `initial_balance`, `status`, `client_id`
+- Clave primaria: `account_id`
+- Clave única: `account_number`
+- Relación: FK a `client.person_id`
 
-Este archivo describe las configuraciones y rutas de la API `accounttransactions_back`. Está basado en una colección exportada desde Postman.
+### 4. `transaction`
+Registra las transacciones realizadas en cuentas.
+- Campos: `transaction_id`, `amount`, `balance`, `date`, `description`, `transaction_type`, `account_id`
+- Clave primaria: `transaction_id`
+- Relación: FK a `account.account_id`
 
-## Configuración de la API
+## Datos Iniciales
 
-### Variables de Entorno:
-- **scheme**: `http`  
-  Esquema utilizado para la conexión a la API.
-- **host**: `localhost`  
-  Host del servidor de la API.
-- **port**: `8080`  
-  Puerto donde la API está disponible.
-- **back**: `/accounttransactions_back/api`  
-  Ruta base de la API.
-
-### Rutas de la API:
-
-1. **Clientes**:
-   - **Ruta base**: `/clients`  
-   - **Descripción**: Permite acceder a la información de los clientes.
-
-2. **Clientes por Identificación**:
-   - **Ruta**: `/identification/`  
-   - **Descripción**: Permite acceder a la información de un cliente usando su identificación.
-
-3. **Cuentas**:
-   - **Ruta base**: `/accounts`  
-   - **Descripción**: Permite acceder a la información de las cuentas.
-
-4. **Cuenta por Número de Cuenta**:
-   - **Ruta**: `/accountNumber/`  
-   - **Descripción**: Permite acceder a la información de una cuenta específica mediante su número de cuenta.
-
-5. **Transacciones**:
-   - **Ruta base**: `/transactions`  
-   - **Descripción**: Permite acceder a las transacciones realizadas en las cuentas.
-
-6. **Informes**:
-   - **Ruta base**: `/reports`  
-   - **Descripción**: Permite generar y acceder a informes relacionados con las cuentas y transacciones.
-
-
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/1.png?raw=true)
+Se incluyen datos de ejemplo para cada tabla:
+- **Persona**: José Lema, masculino, 32 años, identificación `1717493571`.
+- **Cliente**: Usuario con email `joselematest@hotmail.com`.
+- **Cuenta**: Cuenta de ahorro con número `593602` y saldo inicial de `$2000`.
+- **Transacciones**:
+    - Depósito de apertura: `$2000`
+    - Depósito de sueldo: `$2500`
 
 ---
 
-# API Collection: accounttransactions
+# Reporte de Calidad de Código - SonarQube
 
-Esta colección de Postman contiene las rutas y operaciones de la API `accounttransactions`. A continuación se describen las principales rutas y métodos disponibles.
+## 🔐 Seguridad
+- **Calificación:** A
+- **Issues abiertos:** 0
+- No se han detectado vulnerabilidades con impacto en la seguridad del software.
 
-## Rutas y Operaciones
+## ⚙️ Fiabilidad (Reliability)
+- **Calificación:** A
+- **Issues abiertos:** 0
+- No hay problemas que puedan afectar la estabilidad o el correcto funcionamiento del sistema.
 
-### **1. Clientes**
-   - **POST /clients** - Crear un nuevo cliente.
-     - **Cuerpo de la solicitud**:
-       ```json
-       {
-         "email": "joselema@gmail.com",
-         "age": "32",
-         "password": "Ag@68hese10",
-         "name": "jose",
-         "last_name": "lema",
-         "gender": "M",
-         "identification": "1717493571",
-         "address": "Otavalo sn y principal",
-         "phone": "0982547851"
-       }
-       ```
-   
-   - **GET /clients/{identification}** - Obtener los detalles de un cliente por su número de identificación.
-     - **Ejemplo de URL**: `/clients/identification/1717493571`
-   
-   - **PATCH /clients/{id}** - Actualizar los datos de un cliente.
-     - **Cuerpo de la solicitud**:
-       ```json
-       {
-         "email": "joselema@hotmail.com",
-         "status": "TRUE",
-         "password": "Ag@68hese11"
-       }
-       ```
-     - **Ejemplo de URL**: `/clients/1`
+## 🔧 Mantenibilidad (Maintainability)
+- **Calificación:** A
+- **Issues abiertos:** 0
+- Nivel de deuda técnica bajo en relación con el tamaño del código base.
 
-### **2. Cuentas**
-   - **POST /accounts** - Crear una nueva cuenta.
-     - **Cuerpo de la solicitud**:
-       ```json
-       {
-         "accountType": "AHORRO",
-         "initialBalance": "2000.00",
-         "client": {
-           "clientId": 1
-         }
-       }
-       ```
-   
-   - **GET /accounts/{accountNumber}** - Obtener detalles de una cuenta por su número de cuenta.
-     - **Ejemplo de URL**: `/accounts/accountNumber/908727`
-   
-   - **PUT /accounts/{accountNumber}** - Actualizar el estado de una cuenta.
-     - **Ejemplo de URL**: `/accounts/142360`
+## ✅ Issues Aceptados
+- **Cantidad:** 0
+- No hay problemas marcados como aceptados sin corregir.
 
-### **3. Transacciones**
-   - **POST /transactions** - Realizar una nueva transacción.
-     - **Cuerpo de la solicitud**:
-       ```json
-       {
-         "description": "SUELDO 03 2025",
-         "amount": 2500,
-         "account": {
-           "accountNumber": 908727
-         }
-       }
-       ```
+## 🧪 Cobertura de Pruebas
+- **Cobertura total:** 88.8%
+- **Líneas cubiertas:** 253
+- Buen nivel de pruebas automatizadas, superando el estándar recomendado del 80%.
 
-### **4. Informes**
-   - **GET /reports** - Obtener un informe basado en la identificación del cliente y un rango de fechas.
-     - **Parámetros de la consulta**:
-       - `identification`: Identificación del cliente.
-       - `startDate`: Fecha de inicio del reporte.
-       - `endDate`: Fecha final del reporte.
-     - **Ejemplo de URL**:
-       `/reports?identification=1717493571&startDate=2025-04-06&endDate=2025-04-08`
----
-### **5. Ejemplos**
----
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/2.png?raw=true)
+## 🔁 Duplicación de Código
+- **Porcentaje:** 0.0%
+- **Líneas analizadas:** 1,700
+- No se ha detectado código duplicado, lo que indica un alto nivel de reutilización y calidad estructural.
 
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/3.png?raw=true)
+## 🔥 Puntos Críticos de Seguridad (Security Hotspots)
+- **Cantidad:** 0
+- No hay fragmentos de código que requieran revisión manual por posibles riesgos de seguridad.
 
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/4.png?raw=true)
-
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/5.png?raw=true)
-
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/6.png?raw=true)
-
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/7.png?raw=true)
-
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/8.png?raw=true)
-
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/postman/9.png?raw=true)
 ---
 
-## Sonar
+## 🟢 Conclusión
 
-![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_back/src/doc/img/sonar/2.png?raw=true)
+El análisis indica que el código fuente es **seguro, confiable, mantenible, bien probado y libre de duplicación**. Estos resultados reflejan un excelente nivel de calidad y buenas prácticas de desarrollo.
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/back/sonar/10.png?raw=true)
+
+
+# 🚀 Aplicación Spring Boot con Docker
+
+Este proyecto despliega una aplicación Spring Boot utilizando Docker, en dos etapas: una de construcción y otra de ejecución. Se utiliza OpenJDK 17 y Maven para compilar la aplicación, y una imagen final liviana para ejecutarla.
+
 ---
+
+## 🐳 Dockerfile
+
+### Etapa de Construcción
+
+```dockerfile
+FROM openjdk:17-slim AS build
+RUN apt-get update && apt-get install -y maven
+WORKDIR /app
+COPY pom.xml /app
+RUN mvn dependency:go-offline
+COPY src /app/src
+RUN mvn clean package -DskipTests

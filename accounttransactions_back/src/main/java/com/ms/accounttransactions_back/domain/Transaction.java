@@ -1,51 +1,47 @@
 package com.ms.accounttransactions_back.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ms.accounttransactions_back.adapter.out.persistence.entity.Account;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ms.accounttransactions_back.adapter.out.persistence.entity.AccountEntity;
 import com.ms.accounttransactions_back.domain.enums.TransactionType;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+
 import java.time.LocalDateTime;
 
 /**
  * @author : Freddy Torres
- * file :  TransactionDto
- * @since : 4/4/2025, vie
+ * file : Transaction
+ * @since : 25/4/2025, vie
  **/
-
-@Setter
-@Getter
-@ToString
+@Data
 public class Transaction {
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long transactionId;
 
-    @NotBlank(message = "{message.dto.TransactionDto.description.NotNull}")
-    @Size(min = 5, max = 25, message = "{message.dto.TransactionDto.description.Size}")
+    @NotBlank(message = "{message.domain.transaction.description.NotNull}")
+    @Size(min = 5, max = 25, message = "{message.domain.transaction.description.Size}")
     private String description;
 
     @JsonIgnore
     private LocalDateTime date;
 
     @JsonIgnore
-    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
-    @NotNull(message = "{message.dto.TransactionDto.amount.NotNull}")
-    @DecimalMin(value = "-1000000.00", inclusive = true, message = "{message.dto.TransactionDto.amount.DecimalMin}")
-    @DecimalMax(value = "1000000.00", inclusive = true, message = "{message.dto.TransactionDto.amount.DecimalMax}")
+    @NotNull(message = "{message.domain.transaction.amount.NotNull}")
+    @DecimalMin(value = "-1000000.00", inclusive = true, message = "{message.domain.transaction.amount.DecimalMin}")
+    @DecimalMax(value = "1000000.00", inclusive = true, message = "{message.domain.transaction.amount.DecimalMax}")
     private Double amount;
 
     @JsonIgnore
     private Double balance;
 
-    @NotNull(message = "{message.dto.TransactionDto.account.NotNull}")
-    private Account account;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull(message = "{message.domain.transaction.accountEntity.NotNull}")
+    private AccountEntity account;
 }

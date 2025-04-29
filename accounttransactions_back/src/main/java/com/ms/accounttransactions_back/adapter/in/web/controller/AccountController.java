@@ -1,51 +1,42 @@
 package com.ms.accounttransactions_back.adapter.in.web.controller;
 
-import com.ms.accounttransactions_back.domain.AccountByAccountNumber;
-import com.ms.accounttransactions_back.domain.Account;
 import com.ms.accounttransactions_back.adapter.in.web.dto.ApiResponse;
-import com.ms.accounttransactions_back.adapter.in.web.dto.ResponseUtil;
-import com.ms.accounttransactions_back.application.service.AccountService;
+import com.ms.accounttransactions_back.adapter.in.web.util.ResponseUtil;
+import com.ms.accounttransactions_back.application.port.in.AccountPort;
+import com.ms.accounttransactions_back.domain.Account;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 /**
  * @author : Freddy Torres
- * file :  AccountController
- * @since : 4/4/2025, vie
+ * file : AccountController
+ * @since : 25/4/2025, vie
  **/
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${endpoint.accounts.base}")
+@RequestMapping("/accounts")
 public class AccountController {
-
-    @Value("${controller.ok}")
-    public String mensaje;
-
-    private final AccountService accountService;
+    private final AccountPort accountPort;
+    public static final String SUCCESS_MESSAGE = "controllerOk";
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Account>> postAccount(@Valid @RequestBody Account account)  {
-        var accountDto = accountService.saveAccount(account);
-        return new ResponseEntity<>(ResponseUtil.createSuccessResponse(mensaje, accountDto), HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<Account>> postAccount(@Valid @RequestBody Account accountRequest) {
+        var account = accountPort.saveAccount(accountRequest);
+        return ResponseEntity.ok(ResponseUtil.createSuccessResponse(SUCCESS_MESSAGE, account));
     }
-
-    @GetMapping("/accountNumber/{accountNumber}")
-    public ResponseEntity<ApiResponse<AccountByAccountNumber>> getAccountByAccountNumber(@PathVariable Long accountNumber) {
-        var accountDto = accountService.getAccountByAccountNumber(accountNumber);
-        return ResponseEntity.ok(ResponseUtil.createSuccessResponse(mensaje, accountDto));
+    @GetMapping("/identification/{identification}")
+    public ResponseEntity<ApiResponse<List<Account>>> findAllByIdentificationAndStatusTrue(@PathVariable String identification) {
+        var account = accountPort.findByClientIdentification(identification);
+        return ResponseEntity.ok(ResponseUtil.createSuccessResponse(SUCCESS_MESSAGE, account));
     }
-
-    @PutMapping("/{accountNumber}")
-    public ResponseEntity<ApiResponse<AccountByAccountNumber>> putAccountByAccountNumber(@PathVariable Long accountNumber) {
-        var accountDto = accountService.putAccountByAccountNumber(accountNumber);
-        return ResponseEntity.ok(ResponseUtil.createSuccessResponse(mensaje, accountDto));
+    @PatchMapping("/accountNumber/{accountNumber}")
+    public ResponseEntity<ApiResponse<Account>> updateAccount(@PathVariable Long accountNumber) {
+        var account = accountPort.updateAccount(accountNumber);
+        return ResponseEntity.ok(ResponseUtil.createSuccessResponse(SUCCESS_MESSAGE, account));
     }
-
 }

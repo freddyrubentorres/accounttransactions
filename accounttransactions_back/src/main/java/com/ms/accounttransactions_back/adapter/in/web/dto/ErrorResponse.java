@@ -2,12 +2,14 @@ package com.ms.accounttransactions_back.adapter.in.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+
 import java.time.LocalDateTime;
+
 
 /**
  * @author : Freddy Torres
- * file :  ErrorResponse
- * @since : 3/4/2025, jue
+ * file : ErrorResponse
+ * @since : 24/4/2025, jue
  **/
 
 @Getter

@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "94eddd8b-791d-4c85-9cc6-e0ab43ec51c6",
+		"name": "accounttransactions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5012434"
+	},
+	"item": [
+		{
+			"name": "clients",
+			"item": [
+				{
+					"name": "postClients",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"joselema@gmail.com\",\r\n    \"age\":\"32\",\r\n    \"password\":\"Ag@68hese10\",\r\n    \"name\":\"jose\",\r\n    \"lastName\":\"lema\",\r\n    \"gender\":\"M\",\r\n    \"identification\":\"1717493571\",\r\n    \"address\":\"Otavalo sn y principal\",\r\n    \"phone\":\"0982547851\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{clients}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{clients}}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getClientByIdentification",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{clients}}{{byIdentificacion}}1717493571",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{clients}}{{byIdentificacion}}1717493571"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patchClient",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"joselematest@hotmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{clients}}{{byIdentificacion}}1717493571",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{clients}}{{byIdentificacion}}1717493571"
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "accounts",
+			"item": [
+				{
+					"name": "postAccounts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountType\":\"AHORRO\",\r\n    \"initialBalance\":\"2000.00\",\r\n    \"client\":{\r\n        \"identification\":1717493571\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{accounts}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{accounts}}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAccountByAccountNumber",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{accounts}}{{byIdentificacion}}1717493571",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{accounts}}{{byIdentificacion}}1717493571"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patchAccountByStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{accounts}}{{byAccountNumber}}593602",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{accounts}}{{byAccountNumber}}593602"
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "transactions",
+			"item": [
+				{
+					"name": "postTransaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"SUELDO 04 2025\",\r\n    \"amount\":2500,\r\n    \"account\":{\r\n        \"accountNumber\":593602\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{transactions}}",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{transactions}}"
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reports",
+			"item": [
+				{
+					"name": "getReportByIdentificationAndDate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{scheme}}://{{host}}:{{port}}{{back}}{{reports}}?identification=1717493571&startDate=2025-04-06&endDate=2025-04-28",
+							"protocol": "{{scheme}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{back}}{{reports}}",
+							"query": [
+								{
+									"key": "identification",
+									"value": "1717493571"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-04-06"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-04-28"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
