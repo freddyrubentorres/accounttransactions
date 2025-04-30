@@ -110,3 +110,9 @@ El archivo de estilos fue estructurado en módulos y componentes, de modo que ca
 ![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/accounttransactions_front/public/assets/capturas/7.png?raw=true)
 
 ---
+
+### **Reporte Jasmine**
+
+---
+
+![image](https://github.com/freddyrubentorres/accounttransactions/blob/main/img/doc/img/jasmine.png?raw=true)
