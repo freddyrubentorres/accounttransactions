@@ -22,7 +22,7 @@ import java.util.Map;
 @RequestMapping("/reports")
 public class ReportController {
     private final TransactionPort transactionPort;
-    public static final String SUCCESS_MESSAGE = "controllerOk";
+    public static final String SUCCESS_MESSAGE = "Operacion ejecutada correctamente";
 
     @GetMapping
     public ResponseEntity<ApiResponse<Map<Long, List<Report>>>> report(@RequestParam("identification") String identification, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {

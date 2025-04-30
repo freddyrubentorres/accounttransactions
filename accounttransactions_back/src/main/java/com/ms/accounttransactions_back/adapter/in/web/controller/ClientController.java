@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/clients")
 public class ClientController {
     private final ClientPort clientPort;
-    public static final String SUCCESS_MESSAGE = "controllerOk";
+    public static final String SUCCESS_MESSAGE = "Operacion ejecutada correctamente";
 
     @PostMapping
     public ResponseEntity<ApiResponse<Client>> postAccount(@Valid @RequestBody Client clientRequest) {

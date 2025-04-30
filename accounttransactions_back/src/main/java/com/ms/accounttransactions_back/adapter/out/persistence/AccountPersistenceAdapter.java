@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author : Freddy Torres
@@ -58,12 +57,10 @@ public class AccountPersistenceAdapter implements LoadAccountPort {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Account> findByClientIdentification(String identification) {
-        var account = accountRepository.findByClientIdentification(identification);
-        if (account.isEmpty()) throw new NotFoundException(NOT_FOUND_MESSAGE);
-        return account.stream()
+    public Account findByClientIdentification(Long identification) {
+        return accountRepository.findByAccountNumber(identification)
                 .map(AccountMapper::entityToDomain)
-                .toList();
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_MESSAGE));
     }
 
 

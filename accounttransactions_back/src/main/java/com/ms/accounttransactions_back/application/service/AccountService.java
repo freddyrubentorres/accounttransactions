@@ -6,7 +6,7 @@ import com.ms.accounttransactions_back.common.component.UseCase;
 import com.ms.accounttransactions_back.domain.Account;
 import lombok.AllArgsConstructor;
 
-import java.util.List;
+
 
 /**
  * @author : Freddy Torres
@@ -25,7 +25,7 @@ public class AccountService implements AccountPort {
     }
 
     @Override
-    public List<Account> findByClientIdentification(String identification) {
+    public Account findByClientIdentification(Long identification) {
         return loadAccountPort.findByClientIdentification(identification);
     }
 

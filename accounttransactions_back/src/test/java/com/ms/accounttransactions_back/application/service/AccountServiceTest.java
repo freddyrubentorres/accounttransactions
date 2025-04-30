@@ -7,8 +7,6 @@ import com.ms.accounttransactions_back.domain.enums.AccountType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -17,7 +15,7 @@ class AccountServiceTest {
     private LoadAccountPort loadAccountPort;
     private AccountService accountService;
     private Account account;
-    List<Account> mockAccount;
+    Account mockAccount;
 
     @BeforeEach
     void setUp() {
@@ -26,21 +24,21 @@ class AccountServiceTest {
         account = new Account(1L, 123456L, AccountType.AHORRO, 100.00,
                 new ClientEntity(),
                 true);
-        mockAccount = List.of(
+        mockAccount =
                 new Account(
                         1L, 123456L, AccountType.AHORRO, 100.00,
                         new ClientEntity(),
-                        true));
+                        true);
     }
 
     @Test
     void shouldReturnFindByClientIdentification() {
         // When
-        when(loadAccountPort.findByClientIdentification("1758457814")).thenReturn(mockAccount);
-        List<Account> result = accountService.findByClientIdentification("1758457814");
+        when(loadAccountPort.findByClientIdentification(123456L)).thenReturn(mockAccount);
+        Account result = accountService.findByClientIdentification(123456L);
         // Then
         assertNotNull(result);
-        verify(loadAccountPort, times(1)).findByClientIdentification("1758457814");
+        verify(loadAccountPort, times(1)).findByClientIdentification(123456L);
     }
 
     @Test

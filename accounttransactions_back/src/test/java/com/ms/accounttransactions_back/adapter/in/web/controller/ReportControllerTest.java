@@ -52,6 +52,6 @@ class ReportControllerTest {
         ApiResponse<Map<Long, List<Report>>> responseBody = responseEntity.getBody();
         assertNotNull(responseBody);
         assertNotNull(responseBody.getData());
-        assertEquals("controllerOk", responseBody.getMessage());
+        assertEquals("Operacion ejecutada correctamente", responseBody.getMessage());
     }
 }

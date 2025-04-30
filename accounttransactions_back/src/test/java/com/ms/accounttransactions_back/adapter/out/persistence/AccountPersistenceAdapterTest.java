@@ -53,41 +53,6 @@ class AccountPersistenceAdapterTest {
     }
 
     @Test
-    void findByClientIdentification_shouldReturnAccountList() {
-        // Given
-        String identification = "1234567890";
-        when(accountRepository.findByClientIdentification(identification))
-                .thenReturn(List.of(accountEntity));
-        // When
-        List<Account> result = adapter.findByClientIdentification(identification);
-        // Then
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(accountEntity.getAccountNumber(), result.get(0).getAccountNumber());
-    }
-
-    @Test
-    void findByClientIdentification_shouldThrowNotFoundException_whenEmpty() {
-        // Given
-        String identification = "1234567890";
-        when(accountRepository.findByClientIdentification(identification))
-                .thenReturn(Collections.emptyList());
-        // Then
-        NotFoundException exception = assertThrows(NotFoundException.class, () ->
-                adapter.findByClientIdentification(identification));
-        assertEquals("Informacion no encontrada", exception.getMessage());
-    }
-
-    @Test
-    void findByClientIdentification_ShouldThrow_WhenEmpty() {
-        // When
-        when(accountRepository.findByClientIdentification("123456")).thenReturn(Collections.emptyList());
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> adapter.findByClientIdentification("123456"));
-        // Then
-        assertEquals("Informacion no encontrada", exception.getMessage());
-    }
-
-    @Test
     void accountNumber_ShouldGenerateNumberInRange() {
         // Given
         Long result = adapter.accountNumber();

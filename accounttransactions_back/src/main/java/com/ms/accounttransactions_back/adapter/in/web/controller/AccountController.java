@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author : Freddy Torres
  * file : AccountController
@@ -22,7 +20,7 @@ import java.util.List;
 @RequestMapping("/accounts")
 public class AccountController {
     private final AccountPort accountPort;
-    public static final String SUCCESS_MESSAGE = "controllerOk";
+    public static final String SUCCESS_MESSAGE = "Operacion ejecutada correctamente";
 
     @PostMapping
     public ResponseEntity<ApiResponse<Account>> postAccount(@Valid @RequestBody Account accountRequest) {
@@ -30,7 +28,7 @@ public class AccountController {
         return ResponseEntity.ok(ResponseUtil.createSuccessResponse(SUCCESS_MESSAGE, account));
     }
     @GetMapping("/identification/{identification}")
-    public ResponseEntity<ApiResponse<List<Account>>> findAllByIdentificationAndStatusTrue(@PathVariable String identification) {
+    public ResponseEntity<ApiResponse<Account>> findAllByIdentificationAndStatusTrue(@PathVariable Long identification) {
         var account = accountPort.findByClientIdentification(identification);
         return ResponseEntity.ok(ResponseUtil.createSuccessResponse(SUCCESS_MESSAGE, account));
     }

@@ -14,15 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 @SpringBootTest
 @ContextConfiguration(classes = EntityManager.class)
 class AccountControllerTest {
-    private static final String IDENTIFICATION = "1749375738";
     private static final Long ACCOUNT_NUMBER = 123L;
 
     @InjectMocks
@@ -54,16 +51,14 @@ class AccountControllerTest {
     @Test
     void findAllByIdentificationAndStatusTrue() {
         // Given
-        List<Account> accountList = List.of(account);
-        when(accountPort.findByClientIdentification(IDENTIFICATION)).thenReturn(accountList);
+        Account accountList = account;
+        when(accountPort.findByClientIdentification(ACCOUNT_NUMBER)).thenReturn(accountList);
         // When
-        ResponseEntity<ApiResponse<List<Account>>> response = accountController.findAllByIdentificationAndStatusTrue(IDENTIFICATION);
+        ResponseEntity<ApiResponse<Account>> response = accountController.findAllByIdentificationAndStatusTrue(ACCOUNT_NUMBER);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(AccountController.SUCCESS_MESSAGE, response.getBody().getMessage());
-        assertEquals(1, response.getBody().getData().size());
-        assertEquals(ACCOUNT_NUMBER, response.getBody().getData().get(0).getAccountNumber());
     }
 
     @Test

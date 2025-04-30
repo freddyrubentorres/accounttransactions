@@ -2,8 +2,6 @@ package com.ms.accounttransactions_back.application.port.out;
 
 import com.ms.accounttransactions_back.domain.Account;
 
-import java.util.List;
-
 /**
  * @author : Freddy Torres
  * file : LoadAccountPort
@@ -11,6 +9,6 @@ import java.util.List;
  **/
 public interface LoadAccountPort {
     Account saveAccount(Account account);
-    List<Account> findByClientIdentification(String identification);
+    Account findByClientIdentification(Long identification);
     Account updateAccount( Long accountNumber);
 }

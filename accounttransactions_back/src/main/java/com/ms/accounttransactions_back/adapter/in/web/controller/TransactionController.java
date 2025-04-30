@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/transactions")
 public class TransactionController {
     private final TransactionPort transactionPort;
-    public static final String SUCCESS_MESSAGE = "controllerOk";
+    public static final String SUCCESS_MESSAGE = "Operacion ejecutada correctamente";
 
     @PostMapping
     public ResponseEntity<ApiResponse<Transaction>> postAccount(@Valid @RequestBody Transaction transactionRequest) {
