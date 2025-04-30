@@ -24,36 +24,46 @@ Este es el frontend para la gestión de transacciones bancarias, desarrollado co
 
 ---
 
-## **Configuración del Entorno**
+# Configuración del Entorno (Desarrollo)
 
-El archivo de configuración `environment.ts` se encuentra en el directorio `src/environments/` y contiene las URLs base para las solicitudes HTTP realizadas desde el frontend.
+Este archivo define las URLs base para el entorno de desarrollo (`production: false`) de una aplicación que se comunica con un backend en `http://localhost:8080/accounttransactions_back`.
 
-### **Variables de Entorno**
+## Clientes
+- **Crear Cliente**  
+  `POST /api/clients`  
+  URL: `http://localhost:8080/accounttransactions_back/api/clients`
 
-Las variables definidas en `environment.ts` son:
+- **Obtener Cliente por Identificación**  
+  `GET /api/clients/identification/{identificación}`  
+  URL: `http://localhost:8080/accounttransactions_back/api/clients/identification/{identificación}`
 
-- **`production`**: Booleano que indica si el entorno está en modo producción. En este archivo de configuración, el valor es `false`, ya que está configurado para desarrollo local.
-  
-- **`baseUrlgetClients`**: URL base para obtener la información de los clientes. Ejemplo: `http://localhost:8080/accounttransactions_back/api/clients/identification/`.
-  
-- **`baseUrlpostClients`**: URL base para crear nuevos clientes. Ejemplo: `http://localhost:8080/accounttransactions_back/api/clients`.
-  
-- **`baseUrlgetReports`**: URL base para obtener reportes de transacciones. Ejemplo: `http://localhost:8080/accounttransactions_back/api/reports`.
-  
-- **`baseUrlgetAccount`**: URL base para obtener información sobre cuentas por su número. Ejemplo: `http://localhost:8080/accounttransactions_back/api/accounts/accountNumber/`.
-  
-- **`baseUrlpostTransaction`**: URL base para realizar una transacción. Ejemplo: `http://localhost:8080/accounttransactions_back/api/transactions`.
-  
-- **`baseUrlpostAccount`**: URL base para crear una nueva cuenta. Ejemplo: `http://localhost:8080/accounttransactions_back/api/accounts`.
+- **Actualizar Cliente por Identificación**  
+  `PATCH /api/clients/identification/{identificación}`  
+  URL: `http://localhost:8080/accounttransactions_back/api/clients/identification/{identificación}`
 
-### **Uso de las Variables de Entorno**
+## Cuentas
+- **Crear Cuenta**  
+  `POST /api/accounts`  
+  URL: `http://localhost:8080/accounttransactions_back/api/accounts`
 
-Estas variables de entorno se importan directamente en los servicios de la aplicación Angular. Por ejemplo, en el servicio `TransactionService`, se utilizan las siguientes URLs:
+- **Obtener Cuenta por Identificación**  
+  `GET /api/accounts/identification/{identificación}`  
+  URL: `http://localhost:8080/accounttransactions_back/api/accounts/identification/{identificación}`
 
-- **`getAccountNumber`** utiliza `baseUrlgetAccount` para realizar una solicitud GET para obtener los datos de una cuenta.
-- **`createTransaction`** utiliza `baseUrlpostTransaction` para enviar los datos de una transacción al backend.
+- **Actualizar Cuenta por Número de Cuenta**  
+  `PATCH /api/accounts/accountNumber/{número}`  
+  URL: `http://localhost:8080/accounttransactions_back/api/accounts/accountNumber/{número}`
 
-Estas URLs se encuentran configuradas en el archivo `environment.ts` para facilitar el desarrollo y la modificación de la URL del backend en un solo lugar.
+## Transacciones
+- **Crear Transacción**  
+  `POST /api/transactions`  
+  URL: `http://localhost:8080/accounttransactions_back/api/transactions`
+
+## Reportes
+- **Obtener Reportes**  
+  `GET /api/reports`  
+  URL: `http://localhost:8080/accounttransactions_back/api/reports`
+
 
 ---
 
