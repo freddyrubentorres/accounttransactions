@@ -29,7 +29,7 @@ export class ClientComponent {
   // GETDATA
   getClientData(): void {
     if (!this.identification.trim()) {
-      this.errorMessage = 'Por favor, ingrese un número de identificación';
+      this.errorMessage = 'Ingrese un número de identificación';
       return;
     }
     this.errorMessage = '';
@@ -54,11 +54,12 @@ export class ClientComponent {
     this.clientService.createClient(this.newEmployee).subscribe(
       response => {
         this.resetForm();
-        this.errorMessage=response
+        this.errorMessage = response.message
       },
       error => {
+        console.log("error:" + error.error.message.errors);
         if (error.error.message.errors) {
-          this.errorMessage = error.error.message.errors;
+          this.errorMessage = error.error.message.errors.join('<br>');
         } else if (error.error.message) {
           this.errorMessage = error.error.message;
         } else {

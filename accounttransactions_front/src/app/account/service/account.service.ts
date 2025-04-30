@@ -6,10 +6,10 @@ import { environment } from '../../../../src/environments/environment';
   providedIn: 'root'
 })
 export class AccountService {
-  private baseUrlpostAccount: string = environment.baseUrlpostAccount;
+  private urlPostAccounts: string = environment.urlPostAccounts;
   constructor(private http: HttpClient) { }
   createAccount(accountData: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.baseUrlpostAccount, accountData, { headers });
+    return this.http.post(this.urlPostAccounts, accountData, { headers });
   }
 }

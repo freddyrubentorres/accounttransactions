@@ -22,7 +22,7 @@ export class ReportComponent {
 
   // GETDATA
   getClientData(): void {
-    this.data = []; 
+    this.data = [];
     if (!this.identification.trim()) {
       this.errorMessage = 'Ingrese un número de identificación';
       return;
@@ -36,13 +36,14 @@ export class ReportComponent {
       return;
     }
     this.errorMessage = '';
-    const startDateString = this.startDate.toISOString().split('T')[0];  
-    const endDateString = this.endDate.toISOString().split('T')[0]; 
+    const startDateString = this.startDate.toISOString().split('T')[0];
+    const endDateString = this.endDate.toISOString().split('T')[0];
     this.reportService.getReport(this.identification, startDateString, endDateString).subscribe(
       (data) => {
         this.transformData(data);
       },
       (error) => {
+        console.log(error)
         if (error.error.message) {
           this.errorMessage = error.error.message;
         } else {
@@ -73,9 +74,21 @@ export class ReportComponent {
   exportToPDF() {
     const doc = new jsPDF();
     const content = document.querySelector('table');
-    html2canvas(content!).then((canvas) => {
+    if (!content) return;
+    html2canvas(content).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      doc.addImage(imgData, 'PNG', 10, 10, 80, 160);
+      const imgProps = {
+        width: canvas.width,
+        height: canvas.height,
+      };
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = doc.internal.pageSize.getHeight();
+      const scale = Math.min(pdfWidth / imgProps.width, pdfHeight / imgProps.height);
+      const imgWidth = imgProps.width * scale;
+      const imgHeight = imgProps.height * scale;
+      const x = (pdfWidth - imgWidth) / 2;
+      const y = 10;
+      doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
       doc.save('reporte.pdf');
     });
   }

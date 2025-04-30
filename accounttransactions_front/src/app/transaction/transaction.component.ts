@@ -13,7 +13,7 @@ export class TransactionComponent {
   accountData: any = null;
   showForm: boolean = false;
   newTransaction = {
-    account: {accountNumber: ''},
+    account: { accountNumber: '' },
     typeAccount: '',
     amount: '',
     description: ''
@@ -23,7 +23,7 @@ export class TransactionComponent {
 
   getClientData(): void {
     if (!this.accountNumber.trim()) {
-      this.errorMessage = 'Por favor, ingrese numero de cuenta';
+      this.errorMessage = 'Ingrese numero de cuenta';
       return;
     }
     this.errorMessage = '';
@@ -33,7 +33,7 @@ export class TransactionComponent {
           this.accountNumber = '';
           this.showForm = true;
           this.accountData = response.data;
-          this.newTransaction.account.accountNumber =  response.data.accountNumber;
+          this.newTransaction.account.accountNumber = response.data.accountNumber;
           this.newTransaction.typeAccount = response.data.accountType;
         }
       },
@@ -63,7 +63,7 @@ export class TransactionComponent {
       return;
     }
     this.transactionService.createTransaction(this.newTransaction).subscribe(
-      response => {                
+      response => {
         this.errorMessage = response.message;
         this.resetForm();
       },
@@ -106,7 +106,7 @@ export class TransactionComponent {
   // RESET
   resetForm() {
     this.newTransaction = {
-      account: {accountNumber: ''},
+      account: { accountNumber: '' },
       typeAccount: '',
       amount: '',
       description: ''

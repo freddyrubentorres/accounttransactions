@@ -6,10 +6,10 @@ import { environment } from '../../../../src/environments/environment';
   providedIn: 'root'
 })
 export class ReportService {
-  private baseUrlgetReports: string = environment.baseUrlgetReports;
+  private urlGetReports: string = environment.urlGetReports
   constructor(private http: HttpClient) { }
   getReport(identification: string, startDate: string, endDate: string) {
-    const url = `${environment.baseUrlgetReports}?identification=${identification}&startDate=${startDate}&endDate=${endDate}`;
+    const url = `${environment.urlGetReports}?identification=${identification}&startDate=${startDate}&endDate=${endDate}`;
     return this.http.get(url);
   }
 }

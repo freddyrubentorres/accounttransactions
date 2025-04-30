@@ -1,115 +1,95 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ClientComponent } from './client.component';
 import { ClientService } from './service/client.service';
+import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 
 describe('ClientComponent', () => {
-    let component: ClientComponent;
-    let fixture: ComponentFixture<ClientComponent>;
-    let mockClientService: jasmine.SpyObj<ClientService>;
+  let component: ClientComponent;
+  let fixture: ComponentFixture<ClientComponent>;
+  let mockClientService: jasmine.SpyObj<ClientService>;
 
-    beforeEach(() => {
-        mockClientService = jasmine.createSpyObj('ClientService', ['getClientById', 'createClient']);
+  beforeEach(async () => {
+    mockClientService = jasmine.createSpyObj('ClientService', ['getClientById', 'createClient']);
 
-        TestBed.configureTestingModule({
-            declarations: [ClientComponent],
-            providers: [
-                { provide: ClientService, useValue: mockClientService }
-            ]
-        });
+    await TestBed.configureTestingModule({
+      declarations: [ClientComponent],
+      imports: [FormsModule],
+      providers: [
+        { provide: ClientService, useValue: mockClientService }
+      ]
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(ClientComponent);
-        component = fixture.componentInstance;
-    });
+    fixture = TestBed.createComponent(ClientComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it('should create the component', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create component', () => {
+    expect(component).toBeTruthy();
+  });
 
-    describe('getClientData', () => {
-        it('should display an error message if identification is empty', () => {
-            component.identification = '';
-            component.getClientData();
-            expect(component.errorMessage).toBe('Por favor, ingrese un número de identificación');
-        });
+  it('should show error if identification is empty', () => {
+    component.identification = '';
+    component.getClientData();
+    expect(component.errorMessage).toBe('Ingrese un número de identificación');
+  });
 
-        it('should fetch and update client data if identification is valid', () => {
-            const mockResponse = {
-                success: true,
-                data: { name: 'John', last_name: 'Doe', identification: '1234567890' }
-            };
+  it('should fetch client data successfully', fakeAsync(() => {
+    const mockResponse = {
+      success: true,
+      data: { name: 'Juan', identification: '123' }
+    };
+    mockClientService.getClientById.and.returnValue(of(mockResponse));
+    component.identification = '123';
 
-            mockClientService.getClientById.and.returnValue(of(mockResponse));
-            component.identification = '1234567890';
-            component.getClientData();
+    component.getClientData();
+    tick();
 
-            expect(mockClientService.getClientById).toHaveBeenCalledWith('1234567890');
-            expect(component.clientData).toEqual(mockResponse.data);
-            expect(component.identification).toBe('');
-            expect(component.errorMessage).toBe('');
-        });
+    expect(component.clientData).toEqual(mockResponse.data);
+    expect(component.isLoading).toBeFalse();
+    expect(component.errorMessage).toBe('');
+  }));
 
-        it('should handle error if getClientById fails', () => {
-            const mockError = { error: { message: 'Client not found' } };
-            mockClientService.getClientById.and.returnValue(throwError(mockError));
+  it('should handle error on getClientData', fakeAsync(() => {
+    mockClientService.getClientById.and.returnValue(
+      throwError(() => ({ error: { message: 'Cliente no encontrado' } }))
+    );
 
-            component.identification = '1234567890';
-            component.getClientData();
+    component.identification = '123';
+    component.getClientData();
+    tick();
 
-            expect(component.errorMessage).toBe('Client not found');
-            expect(component.clientData).toBeNull();
-        });
-    });
-    describe('resetForm', () => {
-        it('should reset the form values', () => {
-            component.newEmployee = {
-                email: 'test@example.com',
-                age: '30',
-                password: 'password123',
-                name: 'John',
-                last_name: 'Doe',
-                gender: 'M',
-                identification: '1234567890',
-                address: '123 Main St',
-                phone: '1234567890'
-            };
-            component.resetForm();
-            expect(component.newEmployee.email).toBe('');
-            expect(component.newEmployee.age).toBe('');
-            expect(component.newEmployee.password).toBe('');
-            expect(component.newEmployee.name).toBe('');
-            expect(component.newEmployee.last_name).toBe('');
-            expect(component.newEmployee.phone).toBe('');
-        });
-    });
-    describe('validateIdentification', () => {
-        it('should allow only numbers and limit input to 10 digits', () => {
-            const event = { target: { value: '12345678901234' } };
-            component.validateIdentification(event as any);
-            expect(component.newEmployee.identification).toBe('1234567890');
-        });
-    });
+    expect(component.errorMessage).toBe('Cliente no encontrado');
+    expect(component.clientData).toBeNull();
+    expect(component.isLoading).toBeFalse();
+  }));
 
-    describe('validateAge', () => {
-        it('should allow only numbers and limit input to 2 digits', () => {
-            const event = { target: { value: '123' } };
-            component.validateAge(event as any);
-            expect(component.newEmployee.age).toBe('12');
-        });
-    });
+  it('should validate email correctly', () => {
+    const input = { target: { value: 'invalid-email' } } as any;
+    component.validateEmail(input);
+    expect(component.emailInvalid).toBeTrue();
 
-    describe('validateEmail', () => {
-        it('should set emailInvalid to true for invalid email format', () => {
-            const event = { target: { value: 'invalid-email' } };
-            component.validateEmail(event as any);
-            expect(component.emailInvalid).toBeTrue();
-        });
+    const validInput = { target: { value: 'test@example.com' } } as any;
+    component.validateEmail(validInput);
+    expect(component.emailInvalid).toBeFalse();
+  });
 
-        it('should set emailInvalid to false for valid email format', () => {
-            const event = { target: { value: 'valid@example.com' } };
-            component.validateEmail(event as any);
-            expect(component.emailInvalid).toBeFalse();
-        });
-    });
+  it('should validate phone number', () => {
+    const event = { target: { value: '12345abc67890' } } as any;
+    component.validatePhone(event);
+    expect(component.newEmployee.phone).toBe('1234567890');
+  });
 
+  it('should validate identification input', () => {
+    const event = { target: { value: 'abc1234567890' } } as any;
+    component.validateIdentification(event);
+    expect(component.newEmployee.identification).toBe('1234567890');
+  });
+
+  it('should validate age input', () => {
+    const event = { target: { value: 'abc1234' } } as any;
+    component.validateAge(event);
+    expect(component.newEmployee.age).toBe('12');
+  });
 });

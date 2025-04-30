@@ -7,15 +7,15 @@ import { environment } from '../../../../src/environments/environment';
   providedIn: 'root'
 })
 export class ClientService {
-  private baseUrlgetClients: string = environment.baseUrlgetClients;
-  private baseUrlpostClients = environment.baseUrlpostClients;
+  private urlPostClients: string = environment.urlPostClients;
+  private urlGetClients = environment.urlGetClients;
   constructor(private http: HttpClient) { }
   getClientById(identification: string): Observable<any> {
-    const url = `${this.baseUrlgetClients}${identification}`;
+    const url = `${this.urlGetClients}${identification}`;
     return this.http.get(url);
   }
   createClient(clientData: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.baseUrlpostClients, clientData, { headers });
+    return this.http.post(this.urlPostClients, clientData, { headers });
   }
 }

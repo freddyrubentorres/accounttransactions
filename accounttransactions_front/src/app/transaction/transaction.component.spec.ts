@@ -30,7 +30,7 @@ describe('TransactionComponent', () => {
         it('should display an error message if accountNumber is empty', () => {
             component.accountNumber = '';
             component.getClientData();
-            expect(component.errorMessage).toBe('Por favor, ingrese numero de cuenta');
+            expect(component.errorMessage).toBe('Ingrese numero de cuenta');
         });
 
         it('should fetch account data and display the form if account exists', () => {

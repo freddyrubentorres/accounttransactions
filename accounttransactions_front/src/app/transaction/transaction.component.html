@@ -7,16 +7,17 @@
                 <input id="accountNumber" type="text" [(ngModel)]="accountNumber" placeholder="Ingrese numero de cuenta"
                     (input)="validateAccountNumber($event)">
             </div>
-            <div class="form-row">
-                <div class="buttons">
-                    <button (click)="getClientData()">Buscar</button>
-                </div>
+        </div>
+        <hr class="line-separator" />
+        <div class="form-row">
+            <div class="buttons">
+                <button (click)="getClientData()">Buscar</button>
             </div>
         </div>
+        <hr class="line-separator" />
         <div *ngIf="errorMessage" class="error-message">
             <p class="loading-message">{{ errorMessage }}</p>
         </div>
-        <hr class="line-separator" />
         <div *ngIf="showForm">
             <form>
                 <div class="form-row">
@@ -27,20 +28,20 @@
                     </div>
                     <div class="form-group">
                         <label for="typeAccount">Tipo</label>
-                        <input type="text" id="typeAccount" [(ngModel)]="newTransaction.typeAccount"
-                            name="typeAccount"  disabled />
+                        <input type="text" id="typeAccount" [(ngModel)]="newTransaction.typeAccount" name="typeAccount"
+                            disabled />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="description">Descripcion</label>
-                        <input type="text" id="description" [(ngModel)]="newTransaction.description"
-                            name="description" placeholder="Ingrese descripcion" />
+                        <input type="text" id="description" [(ngModel)]="newTransaction.description" name="description"
+                            placeholder="Ingrese descripcion" />
                     </div>
                     <div class="form-group">
                         <label for="amount">Monto</label>
                         <input type="text" id="amount" [(ngModel)]="newTransaction.amount" name="amount"
-                            placeholder="Ingrese monto"  (input)="validateAmount($event)" />
+                            placeholder="Ingrese monto" (input)="validateAmount($event)" />
                     </div>
                 </div>
             </form>

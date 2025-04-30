@@ -18,14 +18,14 @@ export class AccountComponent {
     id: '',
     accountType: 'AHORRO',
     initialBalance: '',
-    client: { clientId: '' }
+    client: { identification: '' }
   }
 
   constructor(private clientService: ClientService, private accountService: AccountService) { }
   // GETDATA
   getClientData(): void {
     if (!this.identification.trim()) {
-      this.errorMessage = 'Por favor, ingrese un número de identificación';
+      this.errorMessage = 'Ingrese un número de identificación';
       return;
     }
     this.errorMessage = '';
@@ -35,9 +35,9 @@ export class AccountComponent {
           this.showForm = true;
           this.clientData = response.data;
           this.identification = '';
-          this.newAccount.name = response.data.name + ' ' + response.data.last_name;
+          this.newAccount.name = response.data.name + ' ' + response.data.lastName;
           this.newAccount.id = response.data.identification;
-          this.newAccount.client.clientId = response.data.clientId;
+          this.newAccount.client.identification = response.data.identification;
         }
       },
       (error) => {
@@ -103,7 +103,7 @@ export class AccountComponent {
       id: '',
       accountType: 'AHORRO',
       initialBalance: '',
-      client: { clientId: '' }
+      client: { identification: '' }
     }
   }
 }

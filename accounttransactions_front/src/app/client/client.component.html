@@ -7,11 +7,40 @@
                 <input id="identification" type="text" [(ngModel)]="identification"
                     placeholder="Ingrese la identificación" (input)="validateIdentification1($event)">
             </div>
-            <div class="form-row">
-                <div class="buttons">
-                    <button (click)="getClientData()">Buscar</button>
-                </div>
+        </div>
+        <div class="form-row">
+            <div class="buttons">
+                <button (click)="getClientData()">Buscar</button>
             </div>
+        </div>
+        <hr class="line-separator" />
+        <div *ngIf="errorMessage" class="error-message">
+            <p class="loading-message" [innerHTML]="errorMessage"></p>
+        </div>
+        <div *ngIf="isLoading">
+            <p class="loading-message">Cargando datos del cliente</p>
+        </div>
+        <div *ngIf="clientData">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Edad</th>
+                        <th>Dirección</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ clientData.name }} {{ clientData.last_name }}</td>
+                        <td>{{ clientData.email }}</td>
+                        <td>{{ clientData.phone }}</td>
+                        <td>{{ clientData.age }}</td>
+                        <td>{{ clientData.address }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <hr class="line-separator" />
         <form (ngSubmit)="onSubmit()">
@@ -77,35 +106,5 @@
                 </div>
             </div>
         </form>
-    </div>
-    <div *ngIf="isLoading">
-        <p class="loading-message">Cargando datos del cliente</p>
-    </div>
-    <div *ngIf="errorMessage" class="error-message">
-        <p class="loading-message">{{ errorMessage }}</p>
-    </div>
-    <div *ngIf="clientData">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Edad</th>
-                    <th>Dirección</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ clientData.clientId }}</td>
-                    <td>{{ clientData.name }} {{ clientData.last_name }}</td>
-                    <td>{{ clientData.email }}</td>
-                    <td>{{ clientData.phone }}</td>
-                    <td>{{ clientData.age }}</td>
-                    <td>{{ clientData.address }}</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </main>

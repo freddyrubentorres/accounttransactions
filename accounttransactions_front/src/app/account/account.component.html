@@ -7,16 +7,17 @@
                 <input id="identification" type="text" [(ngModel)]="identification"
                     placeholder="Ingrese la identificación" (input)="validateIdentification($event)">
             </div>
-            <div class="form-row">
-                <div class="buttons">
-                    <button (click)="getClientData()">Buscar</button>
-                </div>
+        </div>
+        <hr class="line-separator" />
+        <div class="form-row">
+            <div class="buttons">
+                <button (click)="getClientData()">Buscar</button>
             </div>
         </div>
+        <hr class="line-separator" />
         <div *ngIf="errorMessage" class="error-message">
             <p class="loading-message">{{ errorMessage }}</p>
         </div>
-        <hr class="line-separator" />
         <div *ngIf="showForm">
             <form>
                 <div class="form-row">
@@ -48,7 +49,7 @@
             <hr class="line-separator" />
             <div class="form-row">
                 <div class="buttons">
-                    <button (click)="onSubmit()">Añadir movimiento</button>
+                    <button (click)="onSubmit()">Añadir cuenta</button>
                 </div>
             </div>
         </div>
